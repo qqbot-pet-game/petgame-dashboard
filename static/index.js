@@ -504,7 +504,9 @@ function addBotLogin(bot) {
                 $this.attr('src', src.split('?')[0] + "?t=" + (new Date().getTime()));
             }, 500);
         });
-        $('#add-bot-qrcode img').attr('src', 'http://' + current_host.addr + ':' + current_host.port + bot.qrcode_url);
+        var host_addr = current_host.addr;
+        if (host_addr == "localhost" || host_addr == "127.0.0.1") host_addr = window.location.hostname;
+        $('#add-bot-qrcode img').attr('src', 'http://' + host_addr + ':' + current_host.port + bot.qrcode_url);
     }
     if ($('#dialog-add-bot').is(':hidden')) {
         $('#dialog-add-bot').one('shown.bs.modal', loginFunc);
