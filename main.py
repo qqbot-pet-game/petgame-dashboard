@@ -10,7 +10,9 @@ import time
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-config_path = './config.conf'
+root_path = os.path.split(os.path.realpath(__file__))[0] + '/'
+
+config_path = root_path + './config.conf'
 
 config = ConfigParser.ConfigParser()
 config.read(config_path)
