@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>QQ Pet Game</title>
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/vendor/css/bootstrap-switch.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>QQ宠物游戏</h1>
+            <p>在这里查看所有正在运行中的QQ宠物游戏，并进行更改</p>
+            <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p> -->
+        </div>
+        <div id="host-nav" class="col-xs-4">
+            <div class="row" id="host-list-spinner-container">
+                <span class="icon-spinner center-block sz-100 mt-20 mb-20"></span>
+            </div>
+            <div class="row" id="host-list-container" style="display: none;">
+                <div class="form-group">
+                    <!-- <button type="button" class="btn btn-success" id="btn-add-host" data-toggle="modal" data-target="#dialog-add-host">添加站点</button> -->
+                    <button type="button" class="btn btn-success" id="btn-add-host">添加站点</button>
+                </div>
+                <ul class="col-xs-12 list-group host-list" id="host-list">
+                    <a href="javascript:;" class="list-group-item">
+                        <h2>本机</h2>
+                        <h4>http://localhost:8080/</h4>
+                    </a>
+                </ul>
+            </div>
+            <div class="row"></div>
+        </div>
+        <div class="col-xs-8" id="right-panel-container">
+            <div class="row" id="site-info-container" style="display:none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">站点信息</div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="host-edit-name">名称</label>
+                                <div class="col-xs-10"><input type="text" class="form-control" id="host-edit-name" placeholder="给这个站点起个代号"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-2 control-label" for="host-edit-addr">地址</label>
+                                <div class="col-xs-5">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="host-edit-addr" placeholder="站点IP / 域名">
+                                        <span class="input-group-btn"><button class="btn btn-default btn-set-localhost" type="button">本机</button></span>
+                                    </div>
+                                </div>
+                                <label class="col-xs-2 control-label" for="host-edit-port">端口</label>
+                                <div class="col-xs-3"><input type="text" class="form-control" id="host-edit-port" placeholder="8080"></div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <button type="button" class="btn btn-primary pull-right" id="btn-edit-host">保存</button>
+                                    <button type="button" class="btn btn-danger pull-right mr-20" id="btn-delete-host">删除该站点</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-0 mb-140" id="right-panel-spinner-box" style="display:none;">
+                <span class="icon-spinner center-block sz-100"></span>
+            </div>
+            <div class="row mt-0 mb-60" id="right-panel-notload-box" style="display:none;">
+                <div>
+                    <span class="icon-warning center-block sz-100"></span>
+                </div>
+                <p class="text-danger col-xs-12">
+                    无法加载站点上挂载的QQ机器人，该站点可能发生了故障，或是配置有误。请检查站点的配置信息，确保配置无误。如您确定该站点正常工作，请点击“重新加载”来重新加载信息。
+                </p>
+                <div>
+                    <button type="button" class="btn btn-primary center-block" id="btn-reload-host">重新加载</button>
+                </div>
+            </div>
+            <div class="row" id="site-bots-container" style="display:none;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span>站点上挂载的QQ机器人</span>
+                        <!-- <button type="button" class="btn btn-sm btn-success pull-right" style="margin-top: -5px">添加</button> -->
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#dialog-add-bot" id="btn-add-bot">登录新的QQ机器人</button>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group bot-list" id="bot-list">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-add-host" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加站点</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="host-add-name">名称</label>
+                            <div class="col-xs-10"><input type="text" class="form-control" id="host-add-name" placeholder="给这个站点起个代号"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label" for="host-add-addr">地址</label>
+                            <div class="col-xs-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="host-add-addr" placeholder="站点IP / 域名">
+                                    <span class="input-group-btn"><button class="btn btn-default btn-set-localhost" type="button">本机</button></span>
+                                </div>
+                            </div>
+                            <label class="col-xs-2 control-label" for="host-add-port">端口</label>
+                            <div class="col-xs-2"><input type="text" class="form-control" id="host-add-port" placeholder="8080"></div>
+                        </div>
+                        <div class="alert alert-warning alert-dismissible" role="alert" id="dialog-add-host-alert"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="icon-spinner sz-40 pull-left" id="add-host-loading-spinner" style="display:none;"></span>
+                    <button type="button" class="btn btn-default" id="btn-add-host-cancel" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="btn-add-host-submit">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-add-bot" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加QQ机器人</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="add-bot-spinner" style="display:none;">
+                        <span class="icon-spinner center-block sz-100"></span>
+                    </div>
+                    <div class="row" id="add-bot-qrcode" style="display:none;">
+                        <div class="col-xs-12">
+                            <p class="text-center"><strong>请使用手机QQ客户端扫描下面的二维码，并确认登录。</strong></p>
+                            <a href="javascript:;" class="thumbnail center-block" id="add-bot-qrcode-image">
+                                <img alt="请使用手机QQ客户端扫描该二维码，并确认登录。">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" id="add-bot-message">
+                        <p class="" id="add-bot-message-text"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <!-- <button type="button" class="btn btn-primary">保存</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-config-bot" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">配置QQ机器人：<span id="config-bot-account"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="config-bot-spinner" style="display:none;">
+                        <span class="icon-spinner center-block sz-100"></span>
+                    </div>
+                    <div class="row" id="config-bot-main-panel" style="display:none;">
+                        <div class="col-xs-12">
+                            <div>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active">
+                                        <a href="#config-bot-admin" aria-controls="admin" role="tab" data-toggle="tab">管理员</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#config-bot-group" aria-controls="group" role="tab" data-toggle="tab">生效群组</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="config-bot-admin">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <p class="mt-20 ml-20 mr-20">在下面填入系统管理员的QQ号码</p>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="bot-admin-qq-input-list">
+                                            <div class="col-xs-6 bot-admin-qq-input-container">
+                                                <div class="form-group input-group">
+                                                    <input type="text" class="form-control" placeholder="QQ号">
+                                                    <span class="input-group-btn"><button class="btn btn-default btn-bot-admin-qq-remove" type="button">删除</button></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 bot-admin-qq-input-container">
+                                                <div class="form-group input-group">
+                                                    <input type="text" class="form-control" placeholder="QQ号">
+                                                    <span class="input-group-btn"><button class="btn btn-default btn-bot-admin-qq-remove" type="button">删除</button></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 bot-admin-qq-input-container">
+                                                <div class="form-group input-group">
+                                                    <input type="text" class="form-control" placeholder="QQ号">
+                                                    <span class="input-group-btn"><button class="btn btn-default btn-bot-admin-qq-remove" type="button">删除</button></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <button type="button" class="btn btn-success pull-right" id="btn-bot-admin-qq-add">添加</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="config-bot-group">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <p class="mt-20 ml-20 mr-20">在下面勾选该机器人所控制的QQ群</p>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="config-bot-group-list">
+                                            <div class="col-xs-6 bot-group-checkbox-container">
+                                                <div class="form-horizontal">
+                                                    <div class="control-group">
+                                                        <div class="switch switch-mini group-switch" tabindex="0">
+                                                            <input id="bot-group-checkbox-1" type="checkbox" />
+                                                        </div>
+                                                        <label class="control-label" for="bot-group-checkbox-1">哈哈哈哈</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 bot-group-checkbox-container">
+                                                <div class="form-horizontal">
+                                                    <div class="control-group">
+                                                        <div class="switch switch-mini group-switch" tabindex="0">
+                                                            <input id="bot-group-checkbox-2" type="checkbox" />
+                                                        </div>
+                                                        <label class="control-label" for="bot-group-checkbox-2">哈哈哈哈</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 bot-group-checkbox-container">
+                                                <div class="form-horizontal">
+                                                    <div class="control-group">
+                                                        <div class="switch switch-mini group-switch" tabindex="0">
+                                                            <input id="bot-group-checkbox-3" type="checkbox" />
+                                                        </div>
+                                                        <label class="control-label" for="bot-group-checkbox-3">哈哈哈哈</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="config-bot-warning-box">
+                        <div class="col-xs-12">
+                            <div class="alert alert-danger" role="alert" id="config-bot-warning-text"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="btn-config-bot-save">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="dialog-information" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">提示信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="" id="dialog-info-text"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="dialog-info-cancel">取消</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="dialog-info-ack">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade bs-example-modal-sm" id="dialog-loading" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <span class="icon-spinner center-block sz-100 mt-20 mb-20"></span>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/vendor/js/bootstrap-switch.js"></script>
+    <script type="text/javascript" src="/static/index.js"></script>
+</body>
+</html>
