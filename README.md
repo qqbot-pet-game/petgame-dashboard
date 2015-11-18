@@ -4,7 +4,7 @@ A QQ pet game dashboard. To administrate numbers of game launcher. Runs as an we
 
 ## requirements
 ```
-cp config.tpl.conf config.conf
-pip install MySQLdb-python requests
+cp config.tpl.conf config.conf web.py
+pip install MySQLdb-python requests web
 ```
 execute setup.sql in mysql
