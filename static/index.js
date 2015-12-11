@@ -55,7 +55,17 @@ $(document).ready(function (e) {
     });
 
     $('#btn-add-bot').click(function(event) {
-        addBotPre();
+        // addBotPre();
+        $('#add-bot-spinner').hide();
+        $('#add-bot-qq').show();
+        $('#add-bot-qq-input').val('');
+        $('#add-bot-qrcode').hide();
+    });
+    $('#add-bot-qq-btn').click(function(event) {
+        var qq_code = $('#add-bot-qq-input').val();
+        if (qq_code && qq_code.length > 0 && !isNaN(parseInt(qq_code))) {
+            addBotPre(qq_code);
+        }
     });
 
     $('#btn-bot-admin-qq-add').click(function(event) {
@@ -390,13 +400,14 @@ function deleteHost(host) {
     });
 }
 
-function addBotPre() {
+function addBotPre(qq_code) {
     $('#add-bot-spinner').show();
+    $('#add-bot-qq').hide();
     $('#add-bot-qrcode').hide();
     var result_msg = "";
     var preFunc = function() {
         $.ajax({
-            url: '/request/' + current_host.addr + ':' + current_host.port + '/launch',
+            url: '/request/' + current_host.addr + ':' + current_host.port + '/launch|qq=' + qq_code,
             type: 'GET',
             dataType: 'json'
         })
@@ -430,12 +441,15 @@ function addBotPre() {
 function addBotLogin(bot) {
     var result_msg = "";
     var data_gnamelist, data_config;
+    var gamelist_and_config_loaded = false;
     $('#add-bot-spinner').show();
+    $('#add-bot-qq').hide();
     $('#add-bot-qrcode').hide();
     var loginFunc = function() {
         $('#add-bot-qrcode img').one('load', function(event) {
             $('#add-bot-spinner').hide();
             $('#add-bot-qrcode').show();
+        });
             $(this).data('error_time', 0);
             $(this).off('error.qrcode');
             $.when($.ajax({
@@ -481,16 +495,17 @@ function addBotLogin(bot) {
                 });
             })
             .always(function() {
+                gamelist_and_config_loaded = true;
                 if ($('#dialog-add-bot').is(':hidden')) return;
                 $('#dialog-add-bot').modal('hide');
             });
-        });
         $('#add-bot-qrcode img').on('error.qrcode', function(event) {
             $this = $(this);
             var error_time = ($this.data('error_time') || 0) + 1;
             var src = $this.attr('src');
-            if (error_time > 20 || !src) {
+            if (error_time > 60 || !src || gamelist_and_config_loaded) {
                 if ($('#dialog-add-bot').is(':hidden')) return;
+                if (gamelist_and_config_loaded) return;
                 $this.data('error_time', 0);
                 $this.off('error.qrcode');
                 $('#dialog-add-bot').one('hidden.bs.modal', function(event) {
